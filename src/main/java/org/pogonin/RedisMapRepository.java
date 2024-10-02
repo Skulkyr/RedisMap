@@ -47,7 +47,7 @@ public class RedisMapRepository implements Map<String, String>, Closeable {
 
     @Override
     public int size() {
-        return jedis.keys(STR."\{redisNamespace}:*").size();
+        return jedis.keys(redisNamespace + ":*").size();
     }
 
     @Override
@@ -63,7 +63,7 @@ public class RedisMapRepository implements Map<String, String>, Closeable {
 
     @Override
     public boolean containsValue(Object value) {
-        for (String key : jedis.keys(STR."\{redisNamespace}:*")) {
+        for (String key : jedis.keys(redisNamespace + ":*")) {
             if (jedis.get(key).equals(value)) {
                 return true;
             }
@@ -99,7 +99,7 @@ public class RedisMapRepository implements Map<String, String>, Closeable {
 
     @Override
     public void clear() {
-        for (String key : jedis.keys(STR."\{redisNamespace}:*")) {
+        for (String key : jedis.keys(redisNamespace + ":*")) {
             jedis.del(key);
         }
     }
@@ -107,7 +107,7 @@ public class RedisMapRepository implements Map<String, String>, Closeable {
     @Override
     @NotNull
     public Set<String> keySet() {
-        Set<String> fullKeys = jedis.keys(STR."\{redisNamespace}:*");
+        Set<String> fullKeys = jedis.keys(redisNamespace + ":*");
         Set<String> keys = new HashSet<>();
         for (String fullKey : fullKeys) {
             keys.add(fullKey.substring(redisNamespace.length() + 1));
@@ -138,7 +138,7 @@ public class RedisMapRepository implements Map<String, String>, Closeable {
     }
 
     private String getFullKey(String key) {
-        return STR."\{redisNamespace}:\{key}";
+        return redisNamespace + ":" + key;
     }
 
     public void close() {
